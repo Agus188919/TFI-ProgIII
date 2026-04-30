@@ -66,10 +66,36 @@ const usuarioById = async (req, res) => {
     }
 };
 
+
+const editarUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { documento, apellido, nombres, email, contrasenia, foto_path, rol } = req.body;
+        const [usuario] = await db.execute("SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND activo = 1", [id]);
+        
+        if (usuario.length === 0) {
+            return res.status(404).json({ mensaje: "Usuario no encontrado para editar" });
+        }
+
+        const query = `
+            UPDATE usuarios 
+            SET documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
+            WHERE id_usuario = ?
+        `;
+
+        await db.execute(query, [documento, apellido, nombres, email, contrasenia, foto_path, rol, id]);
+
+        res.json({ mensaje: "Usuario actualizado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     getUsuarios,
     crearUsuario,
     eliminarUsuario,
-    usuarioById
+    usuarioById,
+    editarUsuario
     
 };
