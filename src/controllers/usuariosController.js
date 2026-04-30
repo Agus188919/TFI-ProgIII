@@ -1,5 +1,6 @@
 const db = require('../config/db');
 
+
 const getUsuarios = async (req, res) => {
     try {
         const [rows] = await db.query("SELECT * FROM usuarios WHERE activo = 1");
@@ -7,6 +8,7 @@ const getUsuarios = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+    
 };
 
 const crearUsuario = async (req, res) => {
@@ -29,7 +31,45 @@ const crearUsuario = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+
+
+//DELETE y búsqueda x id
+
+const eliminarUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;                
+        const [usuario] = await db.execute("SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND activo = 1", [id]);    
+        if (usuario.length === 0) {
+            return res.status(404).json({ mensaje: "usuario no existe o  fue borrado" });
+        } 
+        await db.execute("UPDATE usuarios SET activo = 0 WHERE id_usuario = ?", [id]);        
+        res.json({ mensaje: "Usuario eliminado " });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const usuarioById = async (req, res) => {
+    try {
+        const id = req.params.id;            
+        const query = "SELECT * FROM usuarios WHERE id_usuario = ? AND activo = 1";
+        const [rows] = await db.execute(query, [id]);         
+        if (rows.length === 0) {
+            return res.status(404).json({ mensaje: "Usuario no encontrado" });
+        }
+        
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     getUsuarios,
-    crearUsuario
+    crearUsuario,
+    eliminarUsuario,
+    usuarioById
+    
 };
