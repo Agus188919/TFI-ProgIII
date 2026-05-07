@@ -1,14 +1,17 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 
 process.loadEnvFile();
 
-const db = require("./config/db");
-const usuariosRoutes = require("./routes/usuariosRoutes");
+const db = require("./db/db");
+const v1Routes = require("./rutas/v1/index");
+
 const app = express();
 
 // middlewares
 app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json());
 
 // ruta de prueba
@@ -26,9 +29,9 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-app.use("/api/usuarios", usuariosRoutes);
+app.use("/api/v1", v1Routes);
 
-const PUERTO = process.env.PUERTO;
-app.listen(PUERTO || 3000, () => {
+const PUERTO = process.env.PUERTO || 3000;
+app.listen(PUERTO, () => {
   console.log(`Servidor corriendo en ${PUERTO}`);
 });
