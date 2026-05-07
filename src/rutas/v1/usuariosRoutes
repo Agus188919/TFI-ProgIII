@@ -1,0 +1,17 @@
+const express = require("express");
+const router = express.Router();
+const usuariosController = require("../../controladores/usuariosController");
+
+const { validacionDeUsuario, validacionId } = require("../../middlewares/validador");
+/*BROWSE*/
+router.get("/", usuariosController.getUsuarios);
+/*READ*/
+router.get("/:id", usuariosController.getUsuarioById);
+/*ADD*/
+router.post("/", usuariosController.crearUsuario);
+/*EDIT*/
+router.put("/:id", usuariosController.editarUsuario);
+/*DELETE*/
+router.delete("/:id", usuariosController.eliminarUsuario);
+
+module.exports = router;
