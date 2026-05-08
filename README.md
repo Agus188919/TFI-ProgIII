@@ -56,5 +56,8 @@ La API responde en el prefijo base: `http://localhost:PORT/api/v1/usuarios`
 ---
 
 ## 👥 Integrantes del Grupo
+* María Belén Lizardo
+* Cristian Emmanuel Sambrana
+* Linda Galeano
+* Luciana Espil
 * Florencia Agustina Mammana
-* 
