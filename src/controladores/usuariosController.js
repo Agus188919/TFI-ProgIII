@@ -2,6 +2,7 @@ const db = require('../db/db');
 
 const usuariosController = {
 
+    // Browse
     getUsuarios: async (req, res) => {
         try {
             const [rows] = await db.query("SELECT * FROM usuarios WHERE activo = 1");
@@ -11,6 +12,7 @@ const usuariosController = {
         }
     },
 
+    // Add
     crearUsuario: async (req, res) => {
         try {
             const { documento, apellido, nombres, email, contrasenia, foto_path, rol } = req.body;
@@ -37,6 +39,7 @@ const usuariosController = {
         }
     },
 
+    // Read
     getUsuarioById: async (req, res) => {
         try {
             const id = parseInt(req.params.id);
@@ -51,6 +54,7 @@ const usuariosController = {
         }
     },
 
+    // Edit
     editarUsuario: async (req, res) => {
         try {
             const id = parseInt(req.params.id);
@@ -71,6 +75,7 @@ const usuariosController = {
         }
     },
 
+    // Delete
     eliminarUsuario: async (req, res) => {
         try {
             const id = parseInt(req.params.id);
