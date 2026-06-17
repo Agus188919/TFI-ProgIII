@@ -38,8 +38,8 @@ router.get("/:id", verifyToken, doctorsController.getById);
  */
 router.post(
     "/",
-    verifyToken,
     restrictTo(Roles.ADMIN),
+    verifyToken,
     [
         check('id_usuario', 'El ID de usuario es obligatorio y numérico').notEmpty().isInt(),
         check('id_especialidad', 'El ID de especialidad es obligatorio y numérico').notEmpty().isInt(),

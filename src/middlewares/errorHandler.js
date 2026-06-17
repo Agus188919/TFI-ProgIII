@@ -7,7 +7,7 @@ const SqlErrors = require('../utils/dbErrors');
  * sensible.
  */
 const errorHandler = (err, req, res, next) => {
-    console.error(`[FATAL ERROR]: ${err.message}`); //>> agregar stackTrace 
+    console.error(`[FATAL ERROR]: ${err.message}`);
     let statusCode = err.statusCode || 500;
     let mensaje = err.message || "Error interno del servidor";
     if (err.code && SqlErrors[err.code]) {
