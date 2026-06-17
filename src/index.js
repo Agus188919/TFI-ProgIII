@@ -1,37 +1,36 @@
 const express = require("express");
+const http = require("http");
 const cors = require("cors");
 const morgan = require("morgan");
 
 process.loadEnvFile();
 
-const db = require("./db/db");
-const v1Routes = require("./rutas/v1/index");
+const v1Routes = require("./routes/v1/index");
+const errorHandler = require("./middlewares/errorHandler");
+const swaggerDocs = require("./config/swagger.config");
+const configureSockets = require("./config/socket.config");
 
 const app = express();
+const server = http.createServer(app);
 
-// middlewares
-app.use(cors());
+configureSockets(server, app);
+
+const corsOptions = {
+  origin: ['http://localhost:4200', 'http://localhost:5173'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
-
-// ruta de prueba
-app.get("/", (req, res) => {
-  res.send("Servidor funcionando");
-});
-
-// TEST DB
-app.get("/test-db", async (req, res) => {
-  try {
-    const [rows] = await db.query("SELECT 1 AS conectado");
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 app.use("/api/v1", v1Routes);
 
-const PUERTO = process.env.PUERTO || 3000;
-app.listen(PUERTO, () => {
-  console.log(`Servidor corriendo en ${PUERTO}`);
+const PORT = process.env.PUERTO || 3000;
+
+swaggerDocs(app, PORT);
+
+app.use(errorHandler);
+
+server.listen(PORT, () => {
+  console.log(`Corriendo S&S en el puerto ${PORT}`);
 });
